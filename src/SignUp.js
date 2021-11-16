@@ -5,11 +5,50 @@ import validate from "./validateInfo";
 
 const SignUp = () => {
   const { handleChange, values, handleSubmit, errors } = useForm(validate);
+  const [succesMessage, setSuccesMessage] = useState("");
+  const submitHandler = (e) => {
+    e.preventDefault();
+
+    let newUser = {
+      username: values.name,
+      email: values.email,
+      password: values.password,
+    };
+    const headers = {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    };
+
+    axios
+      .post(
+        "http://akademia108.pl/api/social-app/user/signup",
+        JSON.stringify(newUser),
+        { headers: headers }
+      )
+      .then((req) => {
+        if (req.data.signedup === false) {
+          if (req.data.message.username) {
+            setSuccesMessage("The username has already been taken.");
+          }
+          if (req.data.message.email) {
+            setSuccesMessage("The username has already been taken.");
+          }
+        } else {
+          setSuccesMessage("Succes");
+        }
+
+        console.log(req.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
 
   return (
     <div className="SignUp">
       <h1> Sign Up </h1>
-      <form className="form" onChange={handleSubmit}>
+      <p>{succesMessage}</p>
+      <form className="form" onSubmit={submitHandler}>
         <div className="input-box">
           <label forhtml="name" className="label name">
             <span className="text">Name</span>
@@ -45,7 +84,7 @@ const SignUp = () => {
             <span className="text">Password</span>
           </label>
           <input
-            type="password"
+            type="text"
             id="password"
             name="password"
             autoComplete="off"
@@ -59,7 +98,7 @@ const SignUp = () => {
             <span className="text">Confirm password</span>
           </label>
           <input
-            type="password"
+            type="text"
             id="passwordRepeat"
             name="passwordRepeat"
             autoComplete="off"

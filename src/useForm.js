@@ -1,5 +1,6 @@
-import React, { useState } from "react";
-import validateInfo from "./validateInfo";
+import React, {
+  useState
+} from "react";
 
 const useForm = (validate) => {
   const [values, setValue] = useState({
@@ -8,11 +9,17 @@ const useForm = (validate) => {
     password: "",
     passwordRepeat: "",
   });
+
+
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const {
+      name,
+      value
+    } = e.target;
     setValue({
       ...values,
       [name]: value,
@@ -24,12 +31,16 @@ const useForm = (validate) => {
     setErrors(validate(values));
     setIsSubmitting(true);
   };
+
+
   return {
     handleChange,
     values,
     handleSubmit,
     errors,
   };
+
+
 };
 
 export default useForm;
